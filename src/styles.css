@@ -1,0 +1,95 @@
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-grey-100: #f9f9f9;
+  --color-grey-200: #e3e3e3;
+  --color-grey-300: #d0d0d0;
+
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+.cero-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--space-xl);
+}
+
+.cero-form {
+  width: 100%;
+  max-width: 620px;
+  margin-top: 15vh;
+}
+
+.cero-input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid var(--color-grey-200);
+  padding: 0 var(--space-md);
+  font-size: 17px;
+  outline: none;
+  background: var(--color-white);
+}
+
+.cero-input:hover {
+  border-color: var(--color-grey-300);
+}
+
+.cero-input:focus {
+  border-color: var(--color-grey-300);
+}
+
+.cero-response-area {
+  width: 100%;
+  max-width: 620px;
+  margin-top: var(--space-xl);
+}
+
+.cero-reply {
+  font-size: 17px;
+  margin-bottom: var(--space-xxl);
+}
+
+.cero-button {
+  border: 1px solid var(--color-grey-200);
+  background: var(--color-white);
+  padding: var(--space-xs) var(--space-lg);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cero-button:hover {
+  background: var(--color-grey-100);
+}
+
+.cero-loading {
+  width: 40px;
+  height: 2px;
+  background: var(--color-black);
+  opacity: 0.4;
+  animation: ceroPulse 0.8s infinite alternate;
+}
+
+@keyframes ceroPulse {
+  from { transform: scaleX(0.3); }
+  to { transform: scaleX(1); }
+}

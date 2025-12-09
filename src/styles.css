@@ -1,95 +1,262 @@
-:root {
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-grey-100: #f9f9f9;
-  --color-grey-200: #e3e3e3;
-  --color-grey-300: #d0d0d0;
+/* styles.css - CERO dark theme */
 
-  --space-xs: 8px;
-  --space-sm: 12px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-xxl: 48px;
+:root {
+  color-scheme: dark;
+  --cero-bg: #050507;
+  --cero-surface: #101016;
+  --cero-surface-soft: #15151f;
+  --cero-border: rgba(255, 255, 255, 0.06);
+  --cero-text-main: #f5f5f7;
+  --cero-text-muted: #8c8c98;
+  --cero-accent: #f3c56a;
+  --cero-error: #ff5c5c;
+  --cero-radius-xl: 24px;
+  --cero-radius-lg: 16px;
+  --cero-radius-pill: 999px;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
-  background: var(--color-white);
-  color: var(--color-black);
+  height: 100%;
+}
+
+body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  background: radial-gradient(circle at top, #161623 0, #050507 55%);
+  color: var(--cero-text-main);
 }
 
 .cero-root {
   min-height: 100vh;
   display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.cero-shell {
+  max-width: 840px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--space-xl);
+  gap: 24px;
+}
+
+.cero-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cero-title {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: var(--cero-accent);
+  margin: 0 0 4px;
+}
+
+.cero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--cero-text-muted);
+  max-width: 520px;
+}
+
+.cero-reset {
+  border-radius: var(--cero-radius-pill);
+  border: 1px solid var(--cero-border);
+  background: transparent;
+  color: var(--cero-text-muted);
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.cero-reset:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cero-text-main);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cero-reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.cero-card {
+  background: radial-gradient(circle at top left, #202033 0, #101016 60%);
+  border-radius: var(--cero-radius-xl);
+  padding: 20px 18px 16px;
+  border: 1px solid var(--cero-border);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 320px;
+}
+
+.cero-log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.cero-placeholder {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cero-text-muted);
+}
+
+.cero-turn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cero-bubble {
+  max-width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--cero-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
+}
+
+.cero-bubble-user {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cero-bubble-cero {
+  align-self: flex-start;
+  background: rgba(5, 5, 7, 0.9);
+}
+
+.cero-label {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 4px;
+  color: var(--cero-text-muted);
+}
+
+.cero-bubble p {
+  margin: 0;
+  white-space: pre-wrap;
 }
 
 .cero-form {
-  width: 100%;
-  max-width: 620px;
-  margin-top: 15vh;
+  border-radius: var(--cero-radius-lg);
+  background: var(--cero-surface-soft);
+  border: 1px solid var(--cero-border);
+  padding: 10px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .cero-input {
   width: 100%;
-  height: 48px;
-  border: 1px solid var(--color-grey-200);
-  padding: 0 var(--space-md);
-  font-size: 17px;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 160px;
+  background: transparent;
+  border: none;
   outline: none;
-  background: var(--color-white);
+  color: var(--cero-text-main);
+  font: inherit;
 }
 
-.cero-input:hover {
-  border-color: var(--color-grey-300);
+.cero-input::placeholder {
+  color: var(--cero-text-muted);
 }
 
-.cero-input:focus {
-  border-color: var(--color-grey-300);
+.cero-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.cero-response-area {
-  width: 100%;
-  max-width: 620px;
-  margin-top: var(--space-xl);
+.cero-error {
+  font-size: 0.8rem;
+  color: var(--cero-error);
 }
 
-.cero-reply {
-  font-size: 17px;
-  margin-bottom: var(--space-xxl);
-}
-
-.cero-button {
-  border: 1px solid var(--color-grey-200);
-  background: var(--color-white);
-  padding: var(--space-xs) var(--space-lg);
-  font-size: 14px;
+.cero-submit {
+  margin-left: auto;
+  border-radius: var(--cero-radius-pill);
+  border: none;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
+  background: linear-gradient(135deg, #f3c56a, #f09c3b);
+  color: #111016;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.15s ease;
 }
 
-.cero-button:hover {
-  background: var(--color-grey-100);
+.cero-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.cero-submit:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
 }
 
 .cero-loading {
   width: 40px;
   height: 2px;
-  background: var(--color-black);
-  opacity: 0.4;
+  background: var(--cero-accent);
+  opacity: 0.6;
   animation: ceroPulse 0.8s infinite alternate;
 }
 
 @keyframes ceroPulse {
   from { transform: scaleX(0.3); }
   to { transform: scaleX(1); }
+}
+
+@media (max-width: 640px) {
+  .cero-card {
+    padding: 16px 12px 12px;
+  }
+
+  .cero-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cero-subtitle {
+    max-width: 100%;
+  }
+
+  .cero-form-footer {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cero-error {
+    max-width: 55%;
+  }
 }

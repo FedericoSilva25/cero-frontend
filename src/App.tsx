@@ -137,8 +137,8 @@ function App() {
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${m.role === "user"
-                    ? "bg-[#181926] text-slate-100"
-                    : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
+                      ? "bg-[#181926] text-slate-100"
+                      : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
                     }`}
                 >
                   <div className="text-[10px] tracking-[0.2em] uppercase mb-1 text-[#f7d48bcc]">

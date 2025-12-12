@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { FormEvent, KeyboardEvent } from "react";
+import type { FormEvent } from "react";
 
 type Message = {
   role: "user" | "cero";
@@ -8,44 +8,12 @@ type Message = {
 
 const API_URL = import.meta.env.VITE_CERO_API_URL;
 
-// Patrones simples para avisar si el usuario está pidiendo algo muy práctico
-const PRACTICAL_HINT_PATTERNS = [
-  "¿qué debería hacer",
-  "que deberia hacer",
-  "¿qué hago con",
-  "que hago con",
-  "escribime un mail",
-  "redactá un mail",
-  "redacta un mail",
-  "armame un cv",
-  "hazme un cv",
-  "haceme un cv",
-  "pasos para",
-  "lista de pasos",
-  "receta de",
-  "programá",
-  "programa",
-  "codigo",
-  "código",
-  "generá un mensaje",
-  "genera un mensaje"
-];
-
-const STARTER_PROMPTS = [
-  "Siento miedo cuando intento avanzar.",
-  "Estoy cansado de pelear conmigo.",
-  "No sé qué hacer con mi vida."
-];
-
 function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [looksPractical, setLooksPractical] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  const hasMessages = messages.length > 0;
 
   // Auto–scroll al último mensaje
   useEffect(() => {
@@ -54,25 +22,16 @@ function App() {
     }
   }, [messages, loading]);
 
-  // Detección básica de pedido práctico para mostrar aviso
-  useEffect(() => {
-    const lower = input.toLowerCase();
-    const match = PRACTICAL_HINT_PATTERNS.some((p) => lower.includes(p));
-    setLooksPractical(match);
-  }, [input]);
-
-  async function sendMessage(explicitText?: string) {
-    if (loading) return;
-
-    const raw = explicitText ?? input;
-    const trimmed = raw.trim();
-    if (!trimmed) return;
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || loading) return;
 
     setError(null);
 
     const nextMessages: Message[] = [
       ...messages,
-      { role: "user", content: trimmed }
+      { role: "user", content: trimmed },
     ];
     setMessages(nextMessages);
     setInput("");
@@ -82,14 +41,14 @@ function App() {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           messages: nextMessages.map((m) => ({
             role: m.role === "user" ? "user" : "assistant",
-            content: m.content
-          }))
-        })
+            content: m.content,
+          })),
+        }),
       });
 
       if (!response.ok) {
@@ -109,29 +68,20 @@ function App() {
       setError(
         "No apareció respuesta esta vez. ¿Qué se mueve en vos cuando lo externo falla?"
       );
+      // No agregamos mensaje de CERO si hay error; solo mostramos el estado de error
     } finally {
       setLoading(false);
     }
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    void sendMessage();
-  }
-
-  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      void sendMessage();
-    }
-  }
-
   function handleNewSession() {
+    // Borramos solo la sesión actual
     setMessages([]);
     setInput("");
     setError(null);
-    setLooksPractical(false);
   }
+
+  const hasMessages = messages.length > 0;
 
   return (
     <div className="min-h-screen bg-[#05060A] text-slate-100 flex flex-col items-center py-10 px-4">
@@ -161,33 +111,18 @@ function App() {
               Cómo usar CERO
             </h2>
             <p className="text-xs text-slate-400 mb-3">
-              No vengas a buscar soluciones. Traé la frase cruda con la que te
-              estás hablando ahora.
+              No vengas a buscar soluciones. Traé la forma real en la que te
+              estás diciendo algo.
             </p>
-            <ul className="text-xs text-slate-400 space-y-1.5 mb-3">
-              <li>• “Siento miedo cuando intento avanzar.”</li>
-              <li>• “Estoy cansado de pelear conmigo.”</li>
+            <ul className="text-xs text-slate-400 space-y-1.5">
+              <li>• “Siento miedo cuando pienso en cambiar de trabajo.”</li>
+              <li>• “No soporto mi propia indecisión.”</li>
               <li>• “Quiero avanzar pero siempre vuelvo al mismo lugar.”</li>
             </ul>
-
-            <p className="text-[11px] text-slate-500 mb-2">
-              Si pedís pasos, estrategias o soluciones, CERO va a mostrar el
-              mecanismo con el que buscás dirección externa, no la respuesta
-              práctica.
+            <p className="text-[11px] text-slate-500 mt-3">
+              Escribí sin corregir. CERO no responde qué hacer; solo muestra la
+              estructura de eso que ya está pasando.
             </p>
-
-            <div className="flex flex-wrap gap-2 mt-2">
-              {STARTER_PROMPTS.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setInput(p)}
-                  className="text-[11px] border border-[#f7d48b33] text-[#f7d48b] px-3 py-1 rounded-full hover:bg-[#f7d48b11] transition"
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
           </section>
         )}
 
@@ -202,8 +137,8 @@ function App() {
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${m.role === "user"
-                      ? "bg-[#181926] text-slate-100"
-                      : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
+                    ? "bg-[#181926] text-slate-100"
+                    : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
                     }`}
                 >
                   <div className="text-[10px] tracking-[0.2em] uppercase mb-1 text-[#f7d48bcc]">
@@ -238,16 +173,14 @@ function App() {
             >
               Decilo acá, sin corregirlo.
             </label>
-
             <div className="flex gap-3 items-end">
               <textarea
                 id="input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
                 rows={2}
                 className="flex-1 resize-none rounded-2xl bg-[#0b0c11] border border-[#1c1d2a] focus:border-[#f7d48b66] outline-none px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
-                placeholder="Traé la frase tal como aparece en vos ahora. Enter para reflejar, Shift+Enter para nueva línea."
+                placeholder="Traé la frase tal como aparece en vos ahora."
               />
               <button
                 type="submit"
@@ -257,14 +190,6 @@ function App() {
                 {loading ? "Reflejando…" : "Reflejar"}
               </button>
             </div>
-
-            {looksPractical && (
-              <p className="text-[11px] text-slate-500 mt-1">
-                Estás formulando algo muy práctico. CERO no va a decirte qué
-                hacer; va a mostrarte cómo convertís esto en un problema a
-                resolver.
-              </p>
-            )}
           </form>
         </section>
       </main>

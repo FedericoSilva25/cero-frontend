@@ -52,17 +52,17 @@ function App() {
 
       const data = await response.json();
 
-      const answer: string =
-        data?.reply ??
-        "No apareció respuesta esta vez. Mirá qué pasa en vos cuando no hay reflejo.";
+      const reply = data?.reply;
 
-      setMessages((prev) => [...prev, { role: "cero", content: answer }]);
+      if (typeof reply !== "string" || reply.trim().length === 0) {
+        throw new Error("Backend reply inválido");
+      }
+
+      setMessages((prev) => [...prev, { role: "cero", content: reply }]);
     } catch (err) {
-      console.error(err);
-      setError(
-        "No apareció respuesta esta vez. ¿Qué se mueve en vos cuando lo externo falla?"
-      );
-      // No agregamos mensaje de CERO si hay error; solo mostramos el estado de error
+      console.error("CERO fetch error:", err);
+      setError("Error de conexión con el backend. Reintentá.");
+      // NO agregamos mensaje de CERO al chat si hay error técnico
     } finally {
       setLoading(false);
     }

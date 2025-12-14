@@ -43,12 +43,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messages: nextMessages.map((m) => ({
-            role: m.role === "user" ? "user" : "assistant",
-            content: m.content,
-          })),
-        }),
+        body: JSON.stringify({ text: trimmed }),
       });
 
       if (!response.ok) {
@@ -58,8 +53,7 @@ function App() {
       const data = await response.json();
 
       const answer: string =
-        data?.answer ??
-        data?.content ??
+        data?.reply ??
         "No apareció respuesta esta vez. Mirá qué pasa en vos cuando no hay reflejo.";
 
       setMessages((prev) => [...prev, { role: "cero", content: answer }]);
@@ -137,8 +131,8 @@ function App() {
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${m.role === "user"
-                      ? "bg-[#181926] text-slate-100"
-                      : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
+                    ? "bg-[#181926] text-slate-100"
+                    : "bg-[#05060b] border border-[#f7d48b33] text-slate-100"
                     }`}
                 >
                   <div className="text-[10px] tracking-[0.2em] uppercase mb-1 text-[#f7d48bcc]">

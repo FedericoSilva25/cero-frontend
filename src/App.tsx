@@ -14,11 +14,12 @@ type SessionState = {
 };
 
 const API_URL = import.meta.env.VITE_CERO_API_URL;
+const LIMITS_ENABLED = import.meta.env.VITE_CERO_LIMITS_ENABLED === "true";
 
 // Configuración de sesión
-const MAX_MESSAGES = 7;
-const SESSION_DURATION_MS = 12 * 60 * 1000; // 12 minutos
-const COOLDOWN_DURATION_MS = 20 * 60 * 60 * 1000; // 20 horas
+const MAX_MESSAGES = LIMITS_ENABLED ? 7 : Number.POSITIVE_INFINITY;
+const SESSION_DURATION_MS = LIMITS_ENABLED ? 12 * 60 * 1000 : Number.POSITIVE_INFINITY; // 12 minutos
+const COOLDOWN_DURATION_MS = LIMITS_ENABLED ? 20 * 60 * 60 * 1000 : 0; // 20 horas
 
 function App() {
   // --- ESTADO DE SUSCRIPCIÓN ---
@@ -88,11 +89,11 @@ function App() {
   const isMessageLimitReached = session.messagesCount >= MAX_MESSAGES;
 
   // Bloqueo efectivo
-  const isBlocked = isCooldown || isTimeUp || isMessageLimitReached;
+  const isBlocked = LIMITS_ENABLED && (isCooldown || isTimeUp || isMessageLimitReached);
 
   // Cerrar sesión si se alcanzaron límites (y no estaba ya cerrada/en cooldown)
   useEffect(() => {
-    if (!isCooldown && (isTimeUp || isMessageLimitReached)) {
+    if (LIMITS_ENABLED && !isCooldown && (isTimeUp || isMessageLimitReached)) {
       // Activar cooldown
       updateSession({
         nextSessionAt: now + COOLDOWN_DURATION_MS,
@@ -100,10 +101,11 @@ function App() {
         messagesCount: 0 // Reseteamos contador visual (o podríamos dejarlo para mostrar stats finales)
       });
     }
-  }, [isCooldown, isTimeUp, isMessageLimitReached]);
+  }, [isCooldown, isTimeUp, isMessageLimitReached, LIMITS_ENABLED]);
 
   // Formateo de tiempo restante
   const formatTime = (ms: number) => {
+    if (!LIMITS_ENABLED) return "";
     const totalSeconds = Math.floor(ms / 1000);
     const m = Math.floor(totalSeconds / 60);
     const s = totalSeconds % 60;
@@ -303,7 +305,7 @@ function App() {
 
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "6px" }}>
             {/* Contadores (solo visibles si hay sesión activa y no está bloqueado) */}
-            {session.startedAt && !isBlocked && (
+            {session.startedAt && !isBlocked && LIMITS_ENABLED && (
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -319,7 +321,7 @@ function App() {
             )}
 
             {/* Aviso de último mensaje */}
-            {messagesLeft === 1 && !isBlocked && (
+            {messagesLeft === 1 && !isBlocked && LIMITS_ENABLED && (
               <div style={{ fontSize: "11px", color: "var(--gold)", padding: "0 4px" }}>
                 Queda un mensaje.
               </div>

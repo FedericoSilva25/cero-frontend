@@ -177,9 +177,8 @@ function App() {
         throw new Error("Backend reply inválido (no string)");
       }
 
-      // Libro: silencio/corte válido.
-      // Si viene vacío, lo convertimos a "—" (corte renderizable).
-      const reply = replyRaw.trim().length === 0 ? "—" : replyRaw;
+      const reply = replyRaw.trim();
+      if (reply.length === 0) throw new Error("Backend reply vacío");
 
       setMessages((prev) => [...prev, { role: "cero", content: reply }]);
     } catch (err) {

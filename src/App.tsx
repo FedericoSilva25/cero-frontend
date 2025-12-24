@@ -118,6 +118,15 @@ function App() {
     return `${hours}h ${minutes}m`;
   };
 
+  // --- CONSTANTES DE TEXTO (LIBRO DEFINITIVO) ---
+  const COPY = {
+    placeholder: "Escribí.",
+    send: "Entrar",
+    loading: "…",
+    error: "No hubo devolución.",
+    sessionClosed: "Sesión cerrada.",
+  };
+
   // --- HANDLERS ---
 
   async function handleSubmit(e: FormEvent) {
@@ -161,16 +170,21 @@ function App() {
       }
 
       const data = await response.json();
-      const reply = data?.reply;
+      const replyRaw = data?.reply;
 
-      if (typeof reply !== "string" || reply.trim().length === 0) {
-        throw new Error("Backend reply inválido");
+      // Si el backend devuelve algo que no es string, eso sí es error técnico.
+      if (typeof replyRaw !== "string") {
+        throw new Error("Backend reply inválido (no string)");
       }
+
+      // Libro: silencio/corte válido.
+      // Si viene vacío, lo convertimos a "—" (corte renderizable).
+      const reply = replyRaw.trim().length === 0 ? "—" : replyRaw;
 
       setMessages((prev) => [...prev, { role: "cero", content: reply }]);
     } catch (err) {
       console.error("CERO fetch error:", err);
-      setError("Error de conexión con el backend. Reintentá.");
+      setError(COPY.error);
     } finally {
       setLoading(false);
     }
@@ -207,35 +221,30 @@ function App() {
         </header>
 
         {!hasMessages && !isBlocked && (
-          <div className="panel help">
-            <h2>Cómo usar CERO</h2>
-            <p>
-              No vengas a buscar soluciones. Traé la forma real en la que te
-              estás diciendo algo.
-            </p>
-            <ul>
-              <li>“Siento miedo cuando pienso en cambiar de trabajo.”</li>
-              <li>“No soporto mi propia indecisión.”</li>
-              <li>“Quiero avanzar pero siempre vuelvo al mismo lugar.”</li>
-            </ul>
-            <p className="small">
-              Escribí sin corregir. CERO no responde qué hacer; solo muestra la
-              estructura de lo que ya está pasando.
+          <div className="panel">
+            <p className="small" style={{ margin: 0 }}>
+              Escribí. Sin buscar utilidad.
             </p>
           </div>
         )}
 
         <div className="chat">
-          {messages.map((m, idx) => (
-            <div key={idx} className={`row ${m.role}`}>
-              <div className="bubble">{m.content}</div>
-            </div>
-          ))}
+          {messages.map((m, idx) => {
+            const isSilence = m.role === "cero" && m.content.trim() === "—";
+
+            return (
+              <div key={idx} className={`row ${m.role}`}>
+                <div className={`bubble ${isSilence ? "silence" : ""}`}>
+                  {m.content}
+                </div>
+              </div>
+            );
+          })}
 
           {loading && (
             <div className="row cero">
               <div className="bubble" style={{ opacity: 0.7 }}>
-                Mirando la forma...
+                {COPY.loading}
               </div>
             </div>
           )}
@@ -254,10 +263,8 @@ function App() {
               <div className="bubble" style={{ borderColor: "var(--gold)", color: "var(--gold)", background: "rgba(214,168,74,0.05)" }}>
                 {isCooldown ? (
                   <>
-                    La sesión se cerró.<br />
-                    No hay nada más que forzar ahora.<br />
-                    <br />
-                    Próxima sesión disponible en: {formatNextSession(session.nextSessionAt!)}
+                    {COPY.sessionClosed}<br />
+                    Próxima sesión en: {formatNextSession(session.nextSessionAt!)}
                   </>
                 ) : (
                   "Cerrando sesión..."
@@ -290,7 +297,7 @@ function App() {
               padding: "0 20px"
             }}>
               {isCooldown
-                ? "No hay sesión disponible ahora. El impulso de seguir también es parte de lo que apareció."
+                ? COPY.sessionClosed
                 : "Sesión finalizada."}
             </div>
           )}
@@ -323,7 +330,7 @@ function App() {
               className="input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={isBlocked ? "" : "Decilo acá, sin corregir."}
+              placeholder={isBlocked ? "" : COPY.placeholder}
               rows={1}
               disabled={isBlocked}
             />
@@ -335,7 +342,7 @@ function App() {
             disabled={loading || !input.trim() || isBlocked}
             style={{ alignSelf: "flex-end" }}
           >
-            {loading ? "..." : "Reflejar"}
+            {loading ? COPY.loading : COPY.send}
           </button>
         </form>
       </div>

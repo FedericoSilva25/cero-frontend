@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import PaywallScreen from "./PaywallScreen";
+import Onboarding from "./Onboarding";
 
 type Message = {
   role: "user" | "cero";
@@ -201,7 +201,7 @@ function App() {
   // --- RENDER ---
 
   if (!isSubscribed) {
-    return <PaywallScreen onSubscribe={handleSubscribe} />;
+    return <Onboarding onComplete={handleSubscribe} />;
   }
 
   const hasMessages = messages.length > 0;

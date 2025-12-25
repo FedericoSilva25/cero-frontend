@@ -32,15 +32,19 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             case 1:
                 return (
                     <>
-                        <h1 className="title">Esto no es una app de ayuda.</h1>
+                        <h1 className="title">CERO</h1>
+                        <h2 className="subtitle" style={{ fontSize: '14px', marginTop: '-20px' }}>No hay respuestas. Solo espejo.</h2>
                         <div className="text-block">
-                            <p>CERO no aconseja.</p>
-                            <p>No explica lo que te pasa.</p>
-                            <p>No te dice qué hacer.</p>
+                            <p>Esto es una app para hablar conmigo mismo sin atajos.</p>
                             <br />
-                            <p>No vas a encontrar alivio, claridad ni guía.</p>
+                            <p>Si me paro frente a un espejo real, interfieren el ego, el pasado, patrones, excusas.</p>
+                            <p>Si hablo con un psicólogo, aparecen las mismas trabas, más el método del profesional y mis experiencias previas.</p>
+                            <p>Si uso una IA común, puedo sabotear la experiencia: pedir consejos, pedir soluciones, exigir que sea guía espiritual, terapeuta o gurú… y vuelvo a escapar.</p>
                             <br />
-                            <p>Si eso es lo que estás buscando, no continúes.</p>
+                            <p><strong>CERO corta eso.</strong></p>
+                            <br />
+                            <p>Acá no vengo a resolver.</p>
+                            <p>Vengo a ver.</p>
                         </div>
                         <button className="btn primary" onClick={handleNext}>
                             Seguir
@@ -50,82 +54,38 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             case 2:
                 return (
                     <>
-                        <div className="text-block">
-                            <p>CERO es un espacio para hablar con uno mismo</p>
-                            <p>sin intermediarios.</p>
-                            <br />
-                            <p>No hay terapeutas.</p>
-                            <p>No hay espiritualidad.</p>
-                            <p>No hay inteligencia que piense por vos.</p>
-                            <br />
-                            <p>Solo preguntas que no te dejan escapar.</p>
-                        </div>
-                        <button className="btn primary" onClick={handleNext}>
-                            Seguir
-                        </button>
-                    </>
-                );
-            case 3:
-                return (
-                    <>
                         <h2 className="subtitle">Regla CERO</h2>
                         <div className="text-block">
-                            <p>En CERO no se permite delegar la propia conciencia.</p>
-                            <br />
-                            <p>Nada de lo que ocurra acá sirve para:</p>
-                            <ul className="list-none">
-                                <li>– recibir consejos</li>
-                                <li>– buscar guía</li>
-                                <li>– obtener validación</li>
-                                <li>– explicar lo que sentís</li>
-                                <li>– evitar una decisión personal</li>
-                            </ul>
-                            <br />
-                            <p>Si algo tranquiliza, ordena o explica, queda afuera.</p>
+                            <p><strong>CERO no responde preguntas prácticas.</strong></p>
+                            <p>Devuelve preguntas que me devuelven a mí.</p>
                         </div>
                         <button className="btn primary" onClick={handleNext}>
                             Entiendo
                         </button>
                     </>
                 );
-            case 4:
+            case 3:
                 return (
                     <>
                         <div className="text-block">
-                            <p>Al entrar aceptás no usar este espacio</p>
-                            <p>para sentirte mejor.</p>
+                            <p>Si entro, acepto que:</p>
                             <br />
-                            <p>Aceptás no pedir que alguien más cargue con el peso.</p>
+                            <ul className="list-none">
+                                <li>no voy a recibir contención,</li>
+                                <li>no voy a recibir claridad inmediata,</li>
+                                <li>no voy a usar CERO para evitar la verdad.</li>
+                            </ul>
                             <br />
-                            <p>Si algo incomoda, no se suaviza.</p>
-                            <p>Si algo confunde, no se aclara.</p>
-                            <br />
-                            <p>Nada se empuja.</p>
-                            <p>Nada se arregla.</p>
+                            <p>Si algo se mueve, es porque ya estaba en mí.</p>
                         </div>
-                        <button className="btn primary" onClick={handleNext}>
-                            Acepto entrar
-                        </button>
-                    </>
-                );
-            case 5:
-                return (
-                    <>
-                        <div className="text-block">
-                            <p>No hay garantías.</p>
-                            <p>No hay progreso.</p>
-                            <p>No hay contención.</p>
-                            <br />
-                            <p>Podés irte ahora.</p>
-                            <p>O podés entrar.</p>
-                        </div>
-                        <div className="actions">
+                        <div className="actions" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <button className="btn primary" onClick={handleEnter}>
-                                Entrar a CERO
+                                Entrar
                             </button>
-                            <button className="btn text-only" onClick={handleExit}>
-                                Salir
+                            <button className="btn" onClick={handleExit}>
+                                No, salir
                             </button>
+                            <p className="small" style={{ textAlign: 'center', opacity: 0.5 }}>Accedés bajo tu propia responsabilidad.</p>
                         </div>
                     </>
                 );

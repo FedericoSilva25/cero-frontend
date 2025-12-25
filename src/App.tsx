@@ -158,6 +158,9 @@ function App() {
     setInput("");
     setLoading(true);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -165,7 +168,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: trimmed }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -180,12 +186,22 @@ function App() {
       }
 
       const reply = replyRaw.trim();
+      // Ya no deberíamos recibir vacíos del backend nuevo, pero por seguridad:
       if (reply.length === 0) throw new Error("Backend reply vacío");
 
       setMessages((prev) => [...prev, { role: "cero", content: reply }]);
-    } catch (err) {
-      console.error("CERO fetch error:", err);
-      setError(COPY.error);
+
+      // Opcional: Si rejected es true, podríamos mostrar un indicador sutil, 
+      // pero por ahora solo mostramos el reflejo (que ya viene adaptado).
+
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.error("Request timed out");
+        setError("No hubo respuesta. Volvé a intentar.");
+      } else {
+        console.error("CERO fetch error:", err);
+        setError(COPY.error);
+      }
     } finally {
       setLoading(false);
     }
